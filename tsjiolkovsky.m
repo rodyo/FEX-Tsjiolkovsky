@@ -3,19 +3,19 @@ function out = tsjiolkovsky(DeltaV, Isp, M0, Me)
 %
 % value = TSJIOLKOVSKY(DeltaV, Isp, M0, Me) should be issued with one
 % of the input parameters empty ([]); the function then calculates the
-% value of this missing parameter. 
+% value of this missing parameter.
 %
-% Definition of the parameter names: 
-%   - DeltaV   [km/s]  possible change in speed 
-%   - Isp      [s]     specific impulse 
+% Definition of the parameter names:
+%   - DeltaV   [km/s]  possible change in speed
+%   - Isp      [s]     specific impulse
 %   - M0       [kg]    start mass (wet mass)
-%   - Me       [kg]    final mass (dry mass)  
+%   - Me       [kg]    final mass (dry mass)
 %
-% TSJIOLKOVSKY is basically an implementation of all possible ways to 
+% TSJIOLKOVSKY is basically an implementation of all possible ways to
 % solve Tsjiolkovsky's equation, once the three other parameters are known.
 %
-% TSJIOLKOVSKY is vectorized in the sense that all non-empty inputs may 
-% be arrays of any dimension. TSJIOLKOVSKY will compute the corresponding 
+% TSJIOLKOVSKY is vectorized in the sense that all non-empty inputs may
+% be arrays of any dimension. TSJIOLKOVSKY will compute the corresponding
 % values for the requested output, with singleton expansion enabled.
 %
 % EXAMPLES:
@@ -30,7 +30,7 @@ function out = tsjiolkovsky(DeltaV, Isp, M0, Me)
 %    Isp =
 %        256.0729   128.0270
 %
-%    >> % With singleton expansion 
+%    >> % With singleton expansion
 %    >> M0 = tsjiolkovsky([1.2; 2.4], [175 210], [], 50)
 %    M0 =
 %        100.6105   89.5429
@@ -46,19 +46,19 @@ function out = tsjiolkovsky(DeltaV, Isp, M0, Me)
 
 
 % If you find this work useful, please consider a donation:
-% https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6G3S5UYM7HJ3N
+% https://www.paypal.me/RodyO/3.5
 
     % Intialize
     error(nargchk(4,4,nargin,'struct'));
     emptyone = find(cellfun('isempty',{DeltaV,Isp,M0,Me}));
     assert(numel(emptyone)==1,...
-        'tsjiolkovsky:unsupported_behavior',...
-        'Exactly 1 argument must be empty.');
-    
+          [mfilename ':unsupported_behavior'],...
+          'Exactly 1 argument must be empty.');
+
     % constants
     g0   = 9.80665e-3;  % [km s-2]
     ceff = Isp*g0;      % [km/s]
-    
+
     % Calculate requested output
     try
         switch emptyone
@@ -72,9 +72,9 @@ function out = tsjiolkovsky(DeltaV, Isp, M0, Me)
                 out = bsxfun(@rdivide, M0, exp(bsxfun(@rdivide,DeltaV,ceff)));
         end
     catch ME
-        ME2 = MException(...
-            'tsjiolkovsky:output_error',...
-            'Could not compute value; most likely due to a dimension mismatch.');
+        ME2 = MException([mfilename ':output_error'], [...
+                         'Could not compute value; most likely due to a ',...
+                         'dimension mismatch.');
         throw(addCause(ME2,ME));
     end
 end
