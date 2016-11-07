@@ -74,7 +74,7 @@ function out = tsjiolkovsky(DeltaV, Isp, M0, Me)
     catch ME
         ME2 = MException([mfilename ':output_error'], [...
                          'Could not compute value; most likely due to a ',...
-                         'dimension mismatch.');
+                         'dimension mismatch.']);
         throw(addCause(ME2,ME));
     end
 end
