@@ -49,7 +49,12 @@ function out = tsjiolkovsky(DeltaV, Isp, M0, Me)
 % https://www.paypal.me/RodyO/3.5
 
     % Intialize
-    error(nargchk(4,4,nargin,'struct'));
+    if verLessThan('MATLAB', '8.6')
+        error(nargchk(4,4,nargin,'struct')); %#ok<NCHKN>
+    else
+        narginchk(4,4);
+    end
+    
     emptyone = find(cellfun('isempty',{DeltaV,Isp,M0,Me}));
     assert(numel(emptyone)==1,...
           [mfilename ':unsupported_behavior'],...
